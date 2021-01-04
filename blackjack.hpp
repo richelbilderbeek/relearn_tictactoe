@@ -7,7 +7,8 @@
 #include <random>
 #include <ctime>
 #include <chrono>
-#include "../src/relearn.hpp"
+#include <relearn.hpp>
+
 #if USING_BOOST_SERIALIZATION
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/access.hpp>

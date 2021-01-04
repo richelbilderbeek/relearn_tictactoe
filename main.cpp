@@ -1,17 +1,17 @@
 /**
  * A Blackjack/21 example showing how non-deterministic (probabilistic)
  * Episodic Q-Learning works.
- * 
+ *
  * @version 0.1.0
  * @author Alex Giokas
  * @date 19.11.2016
  *
  * @see the header (blackjack_header.hpp) for implementation details
  */
-#include "blackjack_header.hpp"
+#include "blackjack.hpp"
 #include <boost/predef.h>
 
-// create aliases for state and action: 
+// create aliases for state and action:
 // - a state is the current hand held by a player
 // - an action is draw(true) or stay(false)
 //
@@ -47,10 +47,10 @@ int main()
 
     using link = relearn::link<state,action>;
     std::deque<std::deque<link>>  experience;
-    
+
     float sum  = 0;
     float wins = 0;
-    std::cout << "starting! Press CTRL-C to stop at any time!" 
+    std::cout << "starting! Press CTRL-C to stop at any time!"
               << std::endl;
     start:
     // play 10 rounds - then stop
@@ -71,7 +71,7 @@ int main()
         if (agent->min_value() && agent->max_value() > 21) {
             goto cmp;
         }
-        // agent decides to draw        
+        // agent decides to draw
         if (agent->draw(gen, s_t, policies)) {
             episode.push_back(link{s_t, action(true)});
             agent->insert(dealer->deal());
@@ -91,13 +91,13 @@ int main()
         // compare hands, assign rewards!
         if (hand_compare(*agent, *dealer)) {
             if (!episode.empty()) {
-                episode.back().state.set_reward(1); 
+                episode.back().state.set_reward(1);
             }
             wins++;
         }
         else {
             if (!episode.empty()) {
-                episode.back().state.set_reward(-1); 
+                episode.back().state.set_reward(-1);
             }
         }
 
@@ -107,8 +107,8 @@ int main()
         experience.push_back(episode);
 
         std::cout << "\twin ratio: " << wins / sum << std::endl;
-        std::cout << "\ton-policy ratio: " 
-                  << agent->policy_actions / (agent->policy_actions + agent->random_actions) 
+        std::cout << "\ton-policy ratio: "
+                  << agent->policy_actions / (agent->policy_actions + agent->random_actions)
                   << std::endl;
     }
 

@@ -6,6 +6,9 @@ TEMPLATE = app
 TARGET = relearn_tictactoe
 INCLUDEPATH += .
 
+INCLUDEPATH += ../relearn/src
+INCLUDEPATH += ../TicTacToe
+
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -19,4 +22,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += blackjack.hpp
-SOURCES += blackjack.cpp
+SOURCES += blackjack.cpp \
+  main.cpp
