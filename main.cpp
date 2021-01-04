@@ -1,3 +1,61 @@
+#include "tictactoegame.h"
+
+#include <cmath>
+#include <relearn.hpp>
+
+// The game
+using game = ribi::tictactoe::Game;
+using winner = ribi::tictactoe::Winner;
+
+// A state of the state of a tic tac toe game
+using state = relearn::state<int>;
+
+// An action is to pick a coordinat
+using action = relearn::action<std::pair<int, int>>;
+
+
+int main()
+{
+  using link = relearn::link<state,action>;
+  relearn::policy<state,action> policies;
+  std::deque<std::deque<link>> experience;
+
+  // Play practice games for player 1
+  for (int i = 0; i != 10; ++i)
+  {
+    game g;
+    std::deque<link> episode;
+
+
+    while (g.GetWinner() == winner::no_winner)
+    {
+      state s = g.GetSummarizedState();
+
+      int x = 0;
+      int y = 0;
+      // Pick a move
+      while (!g.CanDoMove(x, y))
+      {
+        x = std::rand() % 3;
+        y = std::rand() % 3;
+      }
+
+      // Learner plays
+      g.DoMove(x, y);
+      episode.push_back(link{s, action( {x, y} )});
+
+    }
+
+    // Reward
+    double reward = 0.0;
+    if (g.GetWinner() == winner::draw) reward = 0.0;
+    if (g.GetWinner() == winner::player1) reward = 1.0;
+    if (g.GetWinner() == winner::player2) reward = -1.0;
+    episode.back().state.set_reward(reward);
+  }
+}
+
+#ifdef USE_OLD
 /**
  * A Blackjack/21 example showing how non-deterministic (probabilistic)
  * Episodic Q-Learning works.
@@ -8,7 +66,8 @@
  *
  * @see the header (blackjack_header.hpp) for implementation details
  */
-#include "blackjack.hpp"
+
+//#include "blackjack.hpp"
 #include <boost/predef.h>
 
 // create aliases for state and action:
@@ -143,3 +202,4 @@ int main()
 
     return 0;
 }
+#endif

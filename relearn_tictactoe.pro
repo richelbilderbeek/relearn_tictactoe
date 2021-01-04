@@ -9,6 +9,9 @@ INCLUDEPATH += .
 INCLUDEPATH += ../relearn/src
 INCLUDEPATH += ../TicTacToe
 
+CONFIG += c++17
+QMAKE_CXXFLAGS += -std=c++17
+
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -22,5 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += blackjack.hpp
-SOURCES += blackjack.cpp \
-  main.cpp
+SOURCES += main.cpp
+
+SOURCES += \
+  ../TicTacToe/tictactoeboard.cpp \
+  ../TicTacToe/tictactoegame.cpp \
+  ../TicTacToe/tictactoehelper.cpp \
+  ../TicTacToe/tictactoeplayer.cpp \
+  ../TicTacToe/tictactoesquare.cpp
