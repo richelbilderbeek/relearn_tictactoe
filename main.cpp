@@ -13,6 +13,16 @@ using state = relearn::state<int>;
 // An action is to pick a coordinat
 using action = relearn::action<std::pair<int, int>>;
 
+// custom hash can be a standalone function object:
+struct action_hash
+{
+    std::size_t operator()(const action& a) const noexcept
+    {
+        return (a.trait().first * 3)
+          +  a.trait().second
+        ;
+    }
+};
 
 int main()
 {
@@ -44,6 +54,14 @@ int main()
       g.DoMove(x, y);
       episode.push_back(link{s, action( {x, y} )});
 
+      //Opponent plays
+      while (!g.CanDoMove(x, y))
+      {
+        x = std::rand() % 3;
+        y = std::rand() % 3;
+      }
+      g.DoMove(x, y);
+
     }
 
     // Reward
@@ -53,6 +71,17 @@ int main()
     if (g.GetWinner() == winner::player2) reward = -1.0;
     episode.back().state.set_reward(reward);
   }
+
+  // at this point, we have some playing experience, which we're going to use
+  // in order to train the agent.
+  relearn::q_probabilistic<state,action> learner;
+  for (auto & episode : experience) {
+      for (int i = 0; i < 10; i++) {
+          learner(episode, policies);
+      }
+  }
+  std::cout << learner.gamma << '\n';
+
 }
 
 #ifdef USE_OLD
